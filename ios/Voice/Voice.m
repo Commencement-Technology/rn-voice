@@ -114,6 +114,12 @@
   self.recognitionUrlRequest = nil;
   self.sessionId = nil;
   self.isTearingDown = NO;
+
+  AVAudioSession *avAudioSession = [AVAudioSession sharedInstance];
+    if (avAudioSession) {
+        [avAudioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [avAudioSession setMode:AVAudioSessionModeDefault error:nil];
+    }
 }
 
 - (void)resetAudioSession {
@@ -147,6 +153,12 @@
 
   // Tear down resources before starting speech recognition..
   [self teardown];
+
+  if (self.audioSession) {
+        [self.audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
+        [self.audioSession setMode:AVAudioSessionModeMeasurement error:nil];
+        [self.audioSession setActive:true withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    }
 
   self.sessionId = [[NSUUID UUID] UUIDString];
 
